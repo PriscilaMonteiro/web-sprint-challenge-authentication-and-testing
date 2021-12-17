@@ -54,6 +54,37 @@ Your finished project must include all of the following requirements (further in
 Be prepared to demonstrate your understanding of this week's concepts by answering questions on the following topics.
 
 1. Differences between using _sessions_ or _JSON Web Tokens_ for authentication.
+
+Authentication with sessions:
+The server creates a session for the user after the user logs in.
+The session id is then stored on a cookie on the user’s browser.
+While the user stays logged in, the cookie would be sent along with every subsequent request.
+The server can then compare the session id stored on the cookie against the session information stored
+in the memory to verify user’s identity and sends response with the corresponding state.
+
+Authentication with token (JWT)
+
+The server creates JWT with a secret and sends the JWT to the client.
+The client stores the JWT (usually in local storage) and includes JWT in the header with every request.
+The server would then validate the JWT with every request from the client and sends response.
+
+The biggest difference here is that the user's state is not stored on the server,
+as the state is stored inside the token on the client side instead.
+
 2. What does `bcryptjs` do to help us store passwords in a secure manner?
+
+The bcrypt hashing function allows us to build a password security platform
+that scales with computation power and always hashes every password with a salt.
+
 3. How are unit tests different from integration and end-to-end testing?
+
+Unit Testing - Test the smaller units at a software in isolation. Great for testing functions or methods.
+
+Integration Testing - Several units of a software are tested as a group to ensure they work together.
+Great for testing endpoints because they test how different parts work together. (supertest)
+
+End-to-end - Where the whole application is tested simulating real user scenarios closely. (slower and more expensive)
+
 4. How does _Test Driven Development_ change the way we write applications and tests?
+
+TDD makes the code more assertive, you focus on the requirements and code what is needed than better and drier code comes.
