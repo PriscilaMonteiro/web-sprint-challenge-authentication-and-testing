@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 
 module.exports = (req, res, next) => {
   const token = req.headers.authorization
-  console.log(req.headers)
+  
 
   if (!token) {
     return next({ status: 401, message: 'token required'})
@@ -12,20 +12,13 @@ module.exports = (req, res, next) => {
     if (err) {
       return next({
         status: 401,
-        message: `token invalid`
+        message: 'token invalid'
       })
     }
     req.decodedJwt = decoded
-    console.log(decoded)
+
     next()
   })
 };
 
 
-//     1- On valid token in the Authorization header, call next.
-
-//     2- On missing token in the Authorization header,
-//       the response body should include a string exactly as follows: "token required".
-
-//     3- On invalid or expired token in the Authorization header,
-//       the response body should include a string exactly as follows: "token invalid".
