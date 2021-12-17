@@ -57,3 +57,40 @@ Be prepared to demonstrate your understanding of this week's concepts by answeri
 2. What does `bcryptjs` do to help us store passwords in a secure manner?
 3. How are unit tests different from integration and end-to-end testing?
 4. How does _Test Driven Development_ change the way we write applications and tests?
+
+--------------TESTS 20- 8 - 9
+
+server.js > auth endpoints > [POST] /api/auth/login [8] responds with a proper status code on successful login server.js > auth endpoints > [POST] /api/auth/login [8] responds with a proper status code on successful login
+Error: expect(received).toBe(expected) // Object.is equality
+Expected: 200
+Received: 500
+at Object.<anonymous> (/home/codegrade/student/codegrade_mvp.test.js:86:28)
+at processTicksAndRejections (node:internal/process/task_queues:96:5)
+
+---
+
+    server.js > jokes endpoint > [GET] /api/jokes [20] responds with the jokes on valid token server.js > jokes endpoint > [GET] /api/jokes [20] responds with the jokes on valid token
+
+TypeError: Invalid value "undefined" for header "Authorization"
+at ClientRequest.setHeader (node:\_http_outgoing:579:3)
+at Test.request (/home/codegrade/student/node_modules/superagent/src/node/index.js:829:11)
+at Test.Object.<anonymous>.Request.end
+(/home/codegrade/student/node_modules/superagent/src/node/index.js:949:8)
+at Test.end (/home/codegrade/student/node_modules/supertest/lib/test.js:161:7)
+at /home/codegrade/student/node_modules/superagent/src/request-base.js:311:12
+at new Promise (<anonymous>)
+at Test.Object.<anonymous>.RequestBase.then (/home/codegrade/student/node_modules/superagent/src/request-base.js:293:31)
+at processTicksAndRejections (node:internal/process/task_queues:96:5) \***\*\_\_\*\***
+server.js > auth endpoints > [POST] /api/auth/login [9] responds with a welcome message and a token on successful login server.js > auth endpoints > [POST] /api/auth/login [9] responds with a welcome message and a token on successful login
+Error: expect(received).toHaveProperty(path)
+Expected path: "token"
+Received path: []
+Received value: {"message": "secretOrPrivateKey must have a value", "stack": "Error: secretOrPrivateKey must have a value
+at Object.sign (/home/codegrade/student/node_modules/jsonwebtoken/sign.js:107:20)
+at tokenBuilder (/home/codegrade/student/api/auth/token-builder.js:12:21)
+at /home/codegrade/student/api/auth/auth-router.js:33:23
+at Layer.handle [as handle_request] (/home/codegrade/student/node_modules/express/lib/router/layer.js:95:5)
+at next (/home/codegrade/student/node_modules/express/lib/router/route.js:137:13)
+at validatedUser (/home/codegrade/student/api/auth/auth-middleware.js:73:13)"}
+at Object.<anonymous> (/home/codegrade/student/codegrade_mvp.test.js:91:26)
+at processTicksAndRejections (node:internal/process/task_queues:96:5)

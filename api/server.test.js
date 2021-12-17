@@ -28,6 +28,12 @@ test('it is the correct environment for the tests', () => {
 
 const newUser = {username: "Maria", password: "1234"};
 
+//     3- On FAILED registration due to `username` or `password` missing from the request body,
+//       the response body should include a string exactly as follows: "username and password required".
+
+//     4- On FAILED registration due to the `username` being taken,
+//       the response body should include a string exactly as follows: "username taken".
+
 describe('server.js', () => {
     describe('[POST] /api/auth/register', () => {
         it('[1] saves the user with a bcrypted password instead of plain text', async () => {
