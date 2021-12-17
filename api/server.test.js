@@ -2,7 +2,6 @@ const request = require("supertest");
 const server = require("./server");
 const db = require("../data/dbConfig");
 const bcrypt = require("bcryptjs");
-const jokes = require("./jokes/jokes-data");
 
 beforeAll(async () => {
   await db.migrate.rollback();
@@ -76,47 +75,30 @@ describe("server.js", () => {
         .send({ username: "Priscila", password: "1234" });
       expect(res.status).toBe(200);
     }, 750);
-    it("[9] responds with a welcome message and a token on successful login", async () => {
+    it("[8] responds with a welcome message and a token on successful login", async () => {
       const res = await request(server)
         .post("/api/auth/login")
         .send({ username: "Priscila", password: "1234" });
       expect(res.body.message).toMatch(/welcome, Priscila/i);
     }, 750);
-    it("[10] responds with an error status code if username or password are not sent", async () => {}, 750);
-    it("[11] responds with status 422 - missing username or password", async () => {
+    it("[9] responds with status 422 - missing username or password", async () => {
       let res = await request(server)
         .post("/api/auth/login")
         .send({ username: "", password: "1234" });
       expect(res.status).toBe(422);
     }, 750);
-    it("[12] responds with a proper status code on non-existing username", async () => {}, 750);
-    it('[13] responds with "invalid credentials" message on non-existing username', async () => {}, 750);
-    it("[14] responds with a proper status code on invalid password", async () => {}, 750);
-    it('[15] responds with "invalid credentials" message on invalid password', async () => {}, 750);
-
-    //     it('[2] responds with the correct status and message on invalid credentials', async () => {
-    //       let res = await request(server).post('/api/auth/login').send({ username: 'bobsy', password: '1234' })
-    //       expect(res.body.message).toMatch(/invalid credentials/i)
-    //       expect(res.status).toBe(401)
-    //       res = await request(server).post('/api/auth/login').send({ username: 'bob', password: '12345' })
-    //       expect(res.body.message).toMatch(/invalid credentials/i)
-    //       expect(res.status).toBe(401)
-    //     }, 750)
   });
 
   describe("[GET] /api/jokes", () => {
-    it("[16] requests without a token are bounced with proper status and message", async () => {
+    it("[10] requests without a token are bounced with proper status and message", async () => {
       const res = await request(server).get("/api/jokes");
       expect(res.body.message).toMatch(/token required/i);
     }, 750);
-    it('[17] responds with a "token required" message on missing token', async () => {}, 750);
-    it("[18] responds with an error status code on invalid token", async () => {}, 750);
-    it("[19] requests with an invalid token are bounced with proper status and message", async () => {
+    it("[11] requests with an invalid token are bounced with proper status and message", async () => {
       const res = await request(server)
         .get("/api/jokes")
         .set("Authorization", "foobar");
       expect(res.body.message).toMatch(/token invalid/i);
     }, 750);
-    it("[20] responds with the jokes on valid token", async () => {}, 750);
   });
 });
