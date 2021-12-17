@@ -28,131 +28,63 @@ test('it is the correct environment for the tests', () => {
 
 const newUser = {username: "Maria", password: "1234"};
 
-//     3- On FAILED registration due to `username` or `password` missing from the request body,
-//       the response body should include a string exactly as follows: "username and password required".
-
-//     4- On FAILED registration due to the `username` being taken,
-//       the response body should include a string exactly as follows: "username taken".
 
 describe('server.js', () => {
     describe('[POST] /api/auth/register', () => {
         it('[1] saves the user with a bcrypted password instead of plain text', async () => {
-    //   await request(server).post('/api/auth/register').send({ username: 'devon', password: '1234' })
-    //   const devon = await db('users').where('username', 'devon').first()
-    //   expect(bcrypt.compareSync('1234', devon.password)).toBeTruthy()
+            await request(server).post('/api/auth/register').send({ username: 'Maria', password: '1234' })
+            const Maria = await db('users').where('username', 'Maria').first()
+            expect(bcrypt.compareSync('1234', Maria.password)).toBeTruthy()
         }, 750)
-        it('[2] responds with the new user with a bcrypted password on success', async () => {
-
-        }, 750)
-        it('[3] responds with status 201 - successful registration', async () => {
+        it('[2] responds with status 201 - successful registration', async () => {
             const res = await request(server)
-            .post('/api/auth/register')
-            .send(newUser);
+                .post('/api/auth/register')
+                .send(newUser);
             expect(res.status).toBe(201);
         }, 750)
-        it('[4] responds with an error status code if username exists in users table', async () => {
+        it('[3] responds with proper error status code & "username taken" message if username exists in users table', async () => {
+            const res = await request(server)
+                .post('/api/auth/register')
+                .send({ username: 'Priscila', password: '1234' })
+            expect(res.status).toBe(422)
+            expect(res.body.message).toMatch(/username taken/i)
 
         }, 750)
-        it('[5] responds with "username taken" message if username exists in users table', async () => {
+        it('[4] responds with an error status code if password are not sent', async () => {
+            let res = await request(server)
+                .post('/api/auth/register')
+                .send({ username: 'Maria', password: '' })
+            expect(res.status).toBe(422)
+        }, 750)
+        it('[5] responds with an error status code if username are not sent', async () => {
+            let res = await request(server)
+                .post('/api/auth/register')
+                .send({ username: '', password: '1234' })
+            expect(res.status).toBe(422)
+        }, 750)
+        it('[6] responds with "username and password required" message if either is not sent', async () => {
+            const res = await request(server)
+                .post('/api/auth/register')
+                .send({ username: '', password: '1234' })
+                .send({ username: 'Maria', password: '' })
+            expect(res.body.message).toMatch(/username and password required/i)
 
         }, 750)
-        it('[6] responds with an error status code if username or password are not sent', async () => {
-
-        }, 750)
-        it('[7] responds with "username and password required" message if either is not sent', async () => {
-
-        }, 750)
-
-//     it('[4] creates a new user in the database when client does not provide role_name', async () => {
-//       await request(server).post('/api/auth/register').send({ username: 'devon', password: '1234' })
-//       const devon = await db('users').where('username', 'devon').first()
-//       expect(devon).toMatchObject({ username: 'devon' })
-//     }, 750)
-//     it('[5] creates a new user with role_id 3 (the default role) when client does not provide role_name', async () => {
-//       await request(server).post('/api/auth/register').send({ username: 'devon', password: '1234' })
-//       const devon = await db('users').where('username', 'devon').first()
-//       expect(devon).toMatchObject({ role_id: 2 })
-//     }, 750)
-//     it('[6] creates a new user with role_id 2 (existing role instructor) when client provides role_name instructor', async () => {
-//       await request(server).post('/api/auth/register').send({ username: 'devon', password: '1234', role_name: 'instructor' })
-//       const devon = await db('users').where('username', 'devon').first()
-//       expect(devon).toMatchObject({ role_id: 3 })
-//     }, 750)
-//     it('[7] creates a new user with a brand new role_id when client provides a role_name that does not exist yet', async () => {
-//       await request(server).post('/api/auth/register').send({ username: 'devon', password: '1234', role_name: 'valid' })
-//       const devon = await db('users').where('username', 'devon').first()
-//       expect(devon).toMatchObject({ role_id: 4 })
-//     }, 750)
-    
-//     it('[9] responds with the correct user (when omitting role_name from the request)', async () => {
-//       const res = await request(server).post('/api/auth/register').send({ username: 'devon', password: '1234' })
-//       expect(res.body).toMatchObject({ user_id: 3, username: 'devon', role_name: 'student' })
-//     }, 750)
-//     it('[10] responds with the correct user (when choosing an existing role_name)', async () => {
-//       const res = await request(server).post('/api/auth/register').send({ username: 'devon', password: '1234', role_name: 'instructor' })
-//       expect(res.body).toMatchObject({ user_id: 3, username: 'devon', role_name: 'instructor' })
-//     }, 750)
-//     it('[11] responds with the correct user (when choosing a valid role_name not in db)', async () => {
-//       const res = await request(server).post('/api/auth/register').send({ username: 'devon', password: '1234', role_name: 'angel' })
-//       expect(res.body).toMatchObject({ user_id: 3, username: 'devon', role_name: 'angel' })
-//     }, 750)
-//     it('[12] leading and trailing whitespace is trimmed from the role_id', async () => {
-//       const res = await request(server).post('/api/auth/register').send({ username: 'devon', password: '1234', role_name: '    angel    ' })
-//       expect(res.body).toMatchObject({ user_id: 3, username: 'devon', role_name: 'angel' })
-//     }, 750)
-//     it('[13] leading and trailing whitespace is trimmed from the role_id before validating', async () => {
-//       const res = await request(server).post('/api/auth/register').send({ username: 'devon', password: '1234', role_name: '              angel              ' })
-//       expect(res.body).toMatchObject({ user_id: 3, username: 'devon', role_name: 'angel' })
-//     }, 750)
-//     it('[14] responds with proper status and message on role_name over 32 chars after trimming', async () => {
-//       const res = await request(server).post('/api/auth/register').send({ username: 'devon', password: '1234', role_name: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' })
-//       expect(res.body.message).toMatch(/can not be longer than 32 chars/i)
-//       expect(res.status).toBe(422)
-//     }, 750)
-//     it('[15] responds with proper status and message if a client tries to register as an admin', async () => {
-//       let res = await request(server).post('/api/auth/register').send({ username: 'devon', password: '1234', role_name: 'admin' })
-//       expect(res.body.message).toMatch(/can not be admin/i)
-//       expect(res.status).toBe(422)
-//       res = await request(server).post('/api/auth/register').send({ username: 'devon', password: '1234', role_name: '    admin     ' })
-//       expect(res.body.message).toMatch(/can not be admin/i)
-//       expect(res.status).toBe(422)
-//     }, 750)
-//     it('[16] responds with proper status on success', async () => {
-//       const res = await request(server).post('/api/auth/register').send({ username: 'devon', password: '1234' })
-//       expect(res.status).toBe(201)
-//     }, 750)
   })
   describe('[POST] /api/auth/login', () => {
-    it('[8] responds with a proper status code on successful login', async () => {
+    it('[7] responds with a proper status code on successful login', async () => {
         const res = await request(server)
             .post('/api/auth/login')
-            .send(newUser)
+            .send({ username: 'Priscila', password: '1234' })
         expect(res.status).toBe(200)
-        // expect(res.body.message).toMatch(/bob is back/i)
     }, 750)
     it('[9] responds with a welcome message and a token on successful login', async () => {
+        const res = await request(server)
+            .post('/api/auth/login')
+            .send({ username: 'Priscila', password: '1234' })
+       expect(res.body.message).toMatch(/welcome, Priscila/i)
 
     }, 750)
-    //     it('[3] responds with a token with correct { subject, username, role_name, exp, iat }', async () => {
-//       let res = await request(server).post('/api/auth/login').send({ username: 'bob', password: '1234' })
-//       let decoded = jwtDecode(res.body.token)
-//       expect(decoded).toHaveProperty('iat')
-//       expect(decoded).toHaveProperty('exp')
-//       expect(decoded).toMatchObject({
-//         subject: 1,
-//         role_name: 'admin',
-//         username: 'bob',
-//       })
-//       res = await request(server).post('/api/auth/login').send({ username: 'sue', password: '1234' })
-//       decoded = jwtDecode(res.body.token)
-//       expect(decoded).toHaveProperty('iat')
-//       expect(decoded).toHaveProperty('exp')
-//       expect(decoded).toMatchObject({
-//         subject: 2,
-//         role_name: 'instructor',
-//         username: 'sue',
-//       })
-//     }, 750)
     it('[10] responds with an error status code if username or password are not sent', async () => {
 
     }, 750)
@@ -206,32 +138,5 @@ describe('server.js', () => {
         
         }, 750)
     })
-    //   describe('[GET] /api/users', () => {
-//     it('[17] requests without a token are bounced with proper status and message', async () => {
-//       const res = await request(server).get('/api/users')
-//       expect(res.body.message).toMatch(/token required/i)
-//     }, 750)
-//     it('[18] requests with an invalid token are bounced with proper status and message', async () => {
-//       const res = await request(server).get('/api/users').set('Authorization', 'foobar')
-//       expect(res.body.message).toMatch(/token invalid/i)
-//     }, 750)
-//     it('[19] requests with a valid token obtain a list of users', async () => {
-//       let res = await request(server).post('/api/auth/login').send({ username: 'bob', password: '1234' })
-//       res = await request(server).get('/api/users').set('Authorization', res.body.token)
-//       expect(res.body).toMatchObject([{ "role_name": "admin", "user_id": 1, "username": "bob" }, { "role_name": "instructor", "user_id": 2, "username": "sue" }])
-//     }, 750)
-//   })
-//   describe('[GET] /api/users/:user_id', () => {
-//     it('[20] requests with a token with role_name admin obtain the user details', async () => {
-//       let res = await request(server).post('/api/auth/login').send({ username: 'bob', password: '1234' })
-//       res = await request(server).get('/api/users/1').set('Authorization', res.body.token)
-//       expect(res.body).toMatchObject({ "role_name": "admin", "user_id": 1, "username": "bob" })
-//     }, 750)
-//     it('[21] requests with a token with a role_name that is not admin are bounced with proper status and message', async () => {
-//       let res = await request(server).post('/api/auth/login').send({ username: 'sue', password: '1234' })
-//       res = await request(server).get('/api/users/1').set('Authorization', res.body.token)
-//       expect(res.body.message).toMatch(/this is not for you/i)
-//       expect(res.status).toBe(403)
-//     }, 750)
-//   })
 })
+
