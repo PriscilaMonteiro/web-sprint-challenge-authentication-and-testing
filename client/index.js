@@ -1,3 +1,4 @@
+/* eslint-disable no-debugger */
 /* eslint-disable no-undef */
 const usernameInput = document.querySelector("#usernameInput");
 const passwordInput = document.querySelector("#passwordInput");
