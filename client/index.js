@@ -4,9 +4,9 @@ const passwordInput = document.querySelector("#passwordInput");
 const registerBtn = document.querySelector("#registerBtn");
 const loginBtn = document.querySelector("#loginBtn");
 const logoutBtn = document.querySelector("#logoutBtn");
-const getUsersBtn = document.querySelector("#getUsersBtn");
+const getJokesBtn = document.querySelector("#getJokesBtn");
 const message = document.querySelector("#message");
-const userList = document.querySelector("#userList");
+const jokesList = document.querySelector("#jokesList");
 
 const handle = (action) => (evt) => {
   evt.preventDefault();
@@ -36,7 +36,7 @@ const logout = (evt) => {
   evt.preventDefault();
   if (localStorage.getItem("token")) {
     localStorage.removeItem("token");
-    userList.textContent = "";
+    jokesList.textContent = "";
     message.textContent = "Bye!";
   } else {
     message.textContent = "Log in before logging out";
@@ -48,27 +48,31 @@ const getJokes = (evt) => {
   const token = localStorage.getItem("token");
 
   fetch(`/api/jokes`, {
+    method: "GET",
     headers: token ? { Authorization: token } : {},
-  }).then((res) => {
-    return res.json();
-  });
-  // .then(data => { console.log("dataaaaaa",data); message.textContent = data.message })
-  // .catch(err => { message.textContent = err.message; debugger })
-  // .then(jokes => {
-  //   console.log("jokes---",jokes)
-  //   if (Array.isArray(jokes)) {
-  //     jokes.forEach(joke => {
-  //       const div = document.createElement('div')
-  //       div.textContent = joke.joke
-  //       userList.append(div)
-  //     })
-  //   } else {
-  //     message.textContent = jokes.message
-  //   }
-  // })
+  })
+    .then((res) => {
+      return res.json();
+    })
+    .then((jokes) => {
+      console.log(jokes);
+      if (Array.isArray(jokes)) {
+        jokes.forEach((joke) => {
+          const div = document.createElement("div");
+          div.textContent = joke.joke;
+          jokesList.append(div);
+        });
+      } else {
+        message.textContent = users.message;
+      }
+    })
+    .catch((err) => {
+      message.textContent = err.message;
+      debugger;
+    });
 };
 
 registerBtn.addEventListener("click", handle("register"));
 loginBtn.addEventListener("click", handle("login"));
 logoutBtn.addEventListener("click", logout);
-getUsersBtn.addEventListener("click", getJokes);
+getJokesBtn.addEventListener("click", getJokes);
