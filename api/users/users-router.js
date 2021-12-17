@@ -11,3 +11,5 @@ router.get("/", restricted, (req, res, next) => {
 });
 
 module.exports = router;
+
+// or it will come from middleware/restricted

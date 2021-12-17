@@ -39,7 +39,6 @@ const restricted = (req, res, next) => {
 }
 
 
-
 function validUserBody(req, res, next) {
   const { username, password } = req.body
   if (!username || !password) {
